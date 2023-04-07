@@ -1,0 +1,68 @@
+package dfstsp;
+
+import java.io.*;
+import java.util.*;
+
+public class TSP_DFS {
+    private int numCities;
+    private int[][] distance;
+    private boolean[] visited;
+    private int minDistance;
+
+    public TSP_DFS(int n) {
+        numCities = n;
+        distance = new int[numCities][numCities];
+        visited = new boolean[numCities];
+        minDistance = Integer.MAX_VALUE;
+    }
+
+    public void solve(String fileName) throws IOException {
+        readData(fileName);
+        dfs(0, 0, 1);
+        System.out.println("Minimum Distance: " + minDistance);
+    }
+
+    private void readData(String fileName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        String line = br.readLine();
+        int i = 0;
+        while (line != null) {
+        	System.out.println(line);
+            String[] parts = line.trim().split("\\s+");
+            for (int j = 0; j < numCities; j++) {
+                distance[i][j] = calculateDistance(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
+                                                    Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+            }
+            i++;
+            line = br.readLine();
+        }
+        br.close();
+    }
+
+    private void dfs(int currCity, int currDist, int visitedCount) {
+        if (visitedCount == numCities) {
+            currDist += distance[currCity][0];
+            if (currDist < minDistance) {
+                minDistance = currDist;
+            }
+            return;
+        }
+
+        visited[currCity] = true;
+        for (int i = 0; i < numCities; i++) {
+            if (!visited[i]) {
+                dfs(i, currDist + distance[currCity][i], visitedCount + 1);
+            }
+        }
+        visited[currCity] = false;
+    }
+
+    private int calculateDistance(int x1, int y1, int x2, int y2) {
+        return (int) Math.round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
+    }
+
+    public static void main(String[] args) throws IOException {
+        TSP_DFS tsp = new TSP_DFS(5);
+        tsp.solve("./data/test1tsp.txt");
+    }
+}

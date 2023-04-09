@@ -12,23 +12,7 @@ public class TSP_DFS {
     private static int minDistance;
     private static int[] minPath;
     
-    private static void init(String fileName) throws IOException {
-    	int n = 0;
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        String line = br.readLine();
-        while (line != null) {
-            n++;
-            line = br.readLine();
-        }
-        br.close();
-        
-        numCities = n;
-        distance = new int[numCities][numCities];
-        visited = new boolean[numCities];
-        minDistance = Integer.MAX_VALUE;
-        minPath = new int[numCities];
-    }
-
+    /// bootstrap
     public static void solve(String fileName) throws IOException {  	
     	init(fileName);
         
@@ -50,12 +34,39 @@ public class TSP_DFS {
         System.out.println("Minimum Path: " + path);
     }
 
+    // Init datastructures, read data, parse and perform calculations
+    // data from file structure [cityNum, xPos, yPos]\n
+    private static void init(String fileName) throws IOException {        
+        numCities = countCases(fileName);
+        distance = new int[numCities][numCities];
+        visited = new boolean[numCities];
+        minDistance = Integer.MAX_VALUE;
+        minPath = new int[numCities];
+    }
+    
+    // read form cities file and count lines for number of cities
+    @SuppressWarnings("null")
+	private static int countCases(String fileName) throws IOException {
+    	int n = 0;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        String line = br.readLine();
+        // catch empty line misscount
+        while (line != null) {
+        	if (line.compareTo("") != 0)
+        		n++;
+            line = br.readLine();
+        }
+        br.close();
+        return n;
+    }
+
+    // read from cities file and parse data [cityNum, xPos, yPos]
     private static void readData(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         String line = br.readLine();
         int i = 0;
         while (line != null) {
-            String[] parts = line.trim().split("\\s+");
+            String[] parts = line.trim().split("\\s+"); // catch 1 or more whitespaces as data separator
             for (int j = 1; j < parts.length; j++) {
                 distance[i][j - 1] = Integer.parseInt(parts[j]);
             }
@@ -65,6 +76,7 @@ public class TSP_DFS {
         br.close();
     }
 
+    // depth first search algorithm, caches min distance and min path taken
     private static void dfs(int currCity, int currDist, int[] currPath, int visitedCount) {
         if (visitedCount == numCities) {
             currDist += distance[currCity][0];
@@ -86,6 +98,7 @@ public class TSP_DFS {
         visited[currCity] = false;
     }
 
+    // euclidean algorithm for 2D cartesian plane distance calculation
     private static int calculateDistance(int city1, int city2) {
         int x1 = distance[city1][0];
         int y1 = distance[city1][1];
@@ -94,6 +107,7 @@ public class TSP_DFS {
         return (int) Math.round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
     }
 
+    // run cases from filepath
     public static void main(String[] args) throws IOException {
     	TSP_DFS.solve("./data/test1tsp.txt");
     	TSP_DFS.solve("./data/test2atsp.txt");

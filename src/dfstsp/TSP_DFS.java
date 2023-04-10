@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class TSP_DFS {
+	private static long t = 0;
     private static int numCities;
     private static int[][] distance;
     private static boolean[] visited;
@@ -18,7 +20,9 @@ public class TSP_DFS {
         
     	readData(fileName);
         
+    	startTimer();
         dfs(0, 0, new int[numCities], 1);
+        stopTimer();
         
         String path = "";
         System.out.println("Solution for: " + fileName);
@@ -32,6 +36,7 @@ public class TSP_DFS {
             	
         }
         System.out.println("Minimum Path: " + path);
+        printTimer();
     }
 
     // Init datastructures, read data, parse and perform calculations
@@ -58,6 +63,19 @@ public class TSP_DFS {
         }
         br.close();
         return n;
+    }
+    
+    private static void startTimer() {
+    	t = System.nanoTime();
+    }
+    
+    private static void stopTimer() {
+    	t = System.nanoTime();
+    }
+    
+    private static void printTimer() {
+    	long ts = TimeUnit.SECONDS.convert(t, TimeUnit.NANOSECONDS);
+    	System.out.println(String.format("Timer: %s ns",ts));
     }
 
     // read from cities file and parse data [cityNum, xPos, yPos]
@@ -109,8 +127,13 @@ public class TSP_DFS {
 
     // run cases from filepath
     public static void main(String[] args) throws IOException {
-    	TSP_DFS.solve("./data/test1tsp.txt");
-    	TSP_DFS.solve("./data/test2atsp.txt");
-    	TSP_DFS.solve("./data/test3atsp.txt");
+    	//TSP_DFS.solve("./data/test1tsp.txt");
+    	//TSP_DFS.solve("./data/test2atsp.txt");
+    	//TSP_DFS.solve("./data/test3atsp.txt");
+    	
+    	//TSP_DFS.solve("./data/test1-22.txt");
+    	//TSP_DFS.solve("./data/test2-22.txt");
+    	//TSP_DFS.solve("./data/test3-22.txt");
+    	//TSP_DFS.solve("./data/test4-22.txt");
     }
 }

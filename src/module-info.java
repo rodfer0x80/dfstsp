@@ -5,5 +5,5 @@
  * @author rodfer
  *
  */
-module dfstsp {
+module tsp {
 }
